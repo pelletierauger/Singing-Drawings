@@ -5,6 +5,7 @@ let maxFrames = 20;
 let rollDuration = 360;
 let rollCount = 0;
 let gl;
+let time;
 let shaderProgram;
 let vertices;
 
@@ -48,7 +49,7 @@ function setup() {
         center = vec2(gl_Position.x, gl_Position.y);
         center = 512.0 + center * 512.0;
         myposition = vec2(gl_Position.x, gl_Position.y);
-        gl_PointSize = 10.0;
+        gl_PointSize = 150.0;
     }`;
 
     // Create a vertex shader object
@@ -65,9 +66,9 @@ function setup() {
     precision mediump float;
     varying vec2 myposition;
     varying vec2 center;
-
+    uniform float time;
     float rand(vec2 co){
-        return fract(sin(dot(co.xy ,vec2(12.9898,78.233))) * 43758.5453 * (2.0 + sin(co.x)));
+        return fract(sin(dot(co.xy * time,vec2(12.9898,78.233))) * 43758.5453 * (2.0 + sin(co.x)));
     }
     void main(void) {
         // vec2 uv = gl_PointCoord.xy / vec2(1600, 1600);
@@ -88,11 +89,11 @@ function setup() {
         } else {
             alpha = 0.0;
         }
-        // alpha = smoothstep(0.0095, 0.000125, dist_squared) * 0.49;
+        alpha = smoothstep(0.0095, 0.000125, dist_squared) * 0.49;
         float rando = rand(pos);
         // gl_FragColor = vec4(1.0, (1.0 - dist_squared * 40.) * 0.6, 0.0, alpha + ((0.12 - dist_squared) * 4.) - (rando * 0.2));
         // gl_FragColor = vec4(1.0, 1.0 - dist_squared * 1.0, 0.0, 0.35 - dist_squared - (rando * 0.2) + alpha);
-        gl_FragColor = vec4(1.0, 1.0 - dist_squared * 1.0, 0.0, 0.35 - dist_squared - (rando * 0.2));
+        gl_FragColor = vec4(1.0, 1.0 - dist_squared * 1.0, 0.0, (0.35 - dist_squared - (rando * 0.2)) * alpha);
         // gl_FragColor = vec4(d * 0.001, uv.x, 0.0, 0.25);
     }`;
 
@@ -122,7 +123,7 @@ function setup() {
 
     // Use the combined shader program object
     gl.useProgram(shaderProgram);
-
+    time = gl.getUniformLocation(shaderProgram, "time");
 
 
     /*======== Associating shaders to buffer objects ========*/
@@ -164,6 +165,8 @@ function setup() {
 
 function draw() {
     // background(220);
+
+    gl.uniform1f(time, frameCount);
     vertices = [];
     vertices.push(0, 0, 0.0);
     vertices.push(1, 0, 0.0);

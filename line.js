@@ -25,8 +25,8 @@ Line.prototype.display = function(x, y) {
         for (let i = 0; i < this.displayIndex; i++) {
             // ellipse(this.dots[i][0], this.dots[i][1], 15);
             // vertices.push(this.dots[i][0] + Math.sin(frameCount) * 0.001, this.dots[i][1], 0.0);
-            let x = this.dots[i][0] + Math.sin(frameCount) * 0.001;
-            let y = this.dots[i][1] + Math.sin(frameCount - 1) * 0.001;
+            let x = this.dots[i][0] + Math.sin(frameCount + i) * 0.001;
+            let y = this.dots[i][1] + Math.sin(frameCount - 1 + i) * 0.001;
             vertices.push(x, y, 0.0);
         }
     } else {
@@ -37,8 +37,8 @@ Line.prototype.display = function(x, y) {
         for (let i = this.displayIndex - (this.dots.length - 1); i < this.dots.length - 1; i++) {
             // console.log("III  : " + i);
             // ellipse(this.dots[i][0], this.dots[i][1], 15);
-            let x = this.dots[i][0] + Math.sin(frameCount) * 0.001;
-            let y = this.dots[i][1] + Math.sin(frameCount - 1) * 0.001;
+            let x = this.dots[i][0] + Math.sin(frameCount + i) * 0.001;
+            let y = this.dots[i][1] + Math.sin(frameCount - 1 + i) * 0.001;
             vertices.push(x, y, 0.0);
         }
     }
